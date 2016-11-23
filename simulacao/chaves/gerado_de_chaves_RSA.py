@@ -6,14 +6,14 @@ rng = Random.new().read
 RSAkey = RSA.generate(1024, rng)
 
 """
-pool = RandomPool(1024)
+pool = RandomPool(2048)
 pool.stir()
 randfunc = pool.get_bytes
-RSAkey= RSA.generate(1024, randfunc)
+RSAkey= RSA.generate(2048, randfunc)
 
-f = open("SGX_PrivateKey.pem","w+")
+f = open("keypr.pem","w+")
 f.write(RSAkey.exportKey("PEM"))
 f.close()
-f = open("SGX_PublicKey.pem","w+")
+f = open("keypu.pem","w+")
 f.write(RSAkey.publickey().exportKey("PEM"))
 f.close()

@@ -10,8 +10,9 @@ from Crypto.Cipher import AES
 import base64
 from Crypto.Util.randpool import RandomPool
 import psycopg2
-import hashlib
+import hashlib, ssl
 import auditinmetro
+
 
 BLOCK_SIZE=32
 
@@ -41,6 +42,14 @@ fat03 = ""
 hash01 = ""
 hash02 = ""
 hash03 = ""
+
+
+def num2msg(n):
+ s = []
+ while n > 0:
+     s.insert(0, chr(n & 255))
+     n >= 8
+ return ''.join(s)
 
 
 def encrypt(message, passphrase):
@@ -128,29 +137,61 @@ def gravaInmetroLog(id_medidor,leitura,ts):
     print "Log INMETRO Gravado!!!!\n++++++++++++++++++++++++++++++++"
 
 def conectado(con, cliente):
-    fpr = open("chaves/keyPrivate.der")
+    fpr = open("chaves/keypr.pem")
     sgx_key = RSA.importKey(fpr.read())
 
     fpu = open("chaves/medidor01_Publickey.pem")
     public_key = RSA.importKey(fpu.read())
-        
+
+
+    conn = ssl.wrap_socket(con, server_side=True, certfile='chaves/certificado-chave.pem', keyfile= 'chaves/certificado-chave.pem')#certificado
+    conn.setblocking(0)    
     print 'Conectado por', cliente
     
     while True:
-        msg = con.recv(102400)
+        buf = conn.read(1024)
 	#con.close()
         if not msg: break
-        #msg_decodificada = sgx_key.decrypt(tuple(msg))
+
+        #print msg
+        tupla= (msg,)
+        msg_decodificada = sgx_key.decrypt(tupla)
+        print msg_decodificada
         #w = msg[2:len(msg)-3]
-        print msg
+        #print w
+        #print type(w)
+        #z = bytes(w)
+        #rint z
+        #
+        #print type(z)
+        #tupla = (z,)
+        #print tupla
+        #long_msg = long(w)
+        #print long_msg
+        #print type(long_msg)
+        #tupla = (long_msg,"senha")
+        #print tupla
+        #msg_decodificada = sgx_key.decrypt(tupla)
         #bina = msg
 
-        print msg
-	print type(msg)
-        #y = (w,)
-        #msg_decodificada = sgx_key.decrypt(bina)
-        
+        #print msg
+	#print type(msg)
+	#y = (msg[1:len(msg)-3])
+	#print y
+	#w = long(y)
+	#print w
+	#zz = (w,)
+	#print zz
+
+	
+        #y = (base64.b64decode(msg),)
+        #print base64.b64decode(msg)
+        #msg_decodificada = sgx_key.decrypt(zz)
+        #print tupla
         #print msg_decodificada
+        #kk = num2msg(msg_decodificada)
+        
+        #print kk
         
         """     
         deco = decrypt(msg,"medidor")#decodifica a mensagem 
