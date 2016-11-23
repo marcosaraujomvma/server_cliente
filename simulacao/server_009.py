@@ -6,6 +6,8 @@
 #python 2.7
 import socket, ssl, thread,time
 from Crypto.Hash import SHA
+from Crypto.PublicKey import RSA
+
 
 ts = 0
 lista = []
@@ -18,6 +20,7 @@ def teste(newsock,fromaddr):
     conn = ssl.wrap_socket(newsock, server_side=True, certfile='chaves/certificado-chave.pem', keyfile='chaves/certificado-chave.pem')#certificado
     conn.setblocking(0)
     fpu = open("chaves/medidor01_Publickey.pem")
+    public_key = RSA.importKey(fpu.read())
     while True:
         try:
             buf = conn.read(512)#recebe os dados ja decodificado
@@ -39,10 +42,10 @@ def teste(newsock,fromaddr):
                 print type (assinatura_long)
                 msg = ("%s;%s"%(str(leitura),str(ts_medidor)))
                 hash = SHA.new(msg).digest()
-                print msg
-                print hash
+                #print msg
+                #print hash
                 #fpu = open("chaves/medidor01_Publickey.pem")
-                public_key = RSA.importKey(fpu.read())
+                #public_key = RSA.importKey(fpu.read())
                 print public_key
                 #print fpu
                 assinatura_long_tupla = (assinatura_long,)
@@ -69,7 +72,7 @@ def teste(newsock,fromaddr):
     thread.exit()
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.bind(('', 8081))
+sock.bind(('', 8082))
 sock.listen(1)
 print("Servidor Funcionando!")
 

@@ -9,7 +9,7 @@ from Crypto.PublicKey import RSA
 CERT="33ae2a21f4c676cc14cf4473372fa365"
 sock = socket.socket()
 sock.settimeout(2)
-sock.connect(('localhost', 8081))
+sock.connect(('localhost', 8082))
 conn = ssl.wrap_socket(sock)
 fpr = open("chaves/medidor01_Privatekey.pem")
 key = RSA.importKey(fpr.read())
