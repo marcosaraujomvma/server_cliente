@@ -6,14 +6,16 @@ rng = Random.new().read
 RSAkey = RSA.generate(1024, rng)
 
 """
-pool = RandomPool(2048)
+pool = RandomPool(1024)
 pool.stir()
 randfunc = pool.get_bytes
-RSAkey= RSA.generate(2048, randfunc)
+RSAkey= RSA.generate(1024, randfunc)
 
-f = open("keypr.pem","w+")
+f = open("inmetroPrivate.pem","w+")
 f.write(RSAkey.exportKey("PEM"))
 f.close()
-f = open("keypu.pem","w+")
+print "Gerou chave Privada"
+f = open("inmetroPublic.pem","w+")
 f.write(RSAkey.publickey().exportKey("PEM"))
 f.close()
+print "Gerou chave Publica"
