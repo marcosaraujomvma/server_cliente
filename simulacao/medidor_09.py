@@ -29,7 +29,7 @@ if hashlib.md5(conn.getpeercert(True)).hexdigest() != CERT:
     print 'CERT diferente do esperado, tentando me hackearrrrrrr'
 else:
     print 'Conectado!'
-    for i in range(10):
+    for i in range(10000000):
         time.sleep(1)
         ts = time.time()
         leitura = random.randint(1,6)

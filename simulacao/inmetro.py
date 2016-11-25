@@ -57,27 +57,39 @@ def conferirAssinatura(id_medidor,msg,assinatura):
         print "Assinatura Incorreta"
         return False
 
+
 def pegaBancoInmetro(id_valor,ts_inicial,ts_final):
 
     lista_id_medidor = []
     lista_leitura = []
     lista_ts_medidor = []
+    try: 
     
-    con = psycopg2.connect(host='192.168.122.232', user='postgres', password='postgres',dbname='inmetrobd')
-    bd = con.cursor(cursor_factory = psycopg2.extras.DictCursor)
-    sql = "select (id_medidor,leitura,ts_medidor) from logmedidores where id_medidor = '%s' and ts_medidor between '%s' and '%s'"%(id_valor,ts_inicial,ts_final)
-    bd.execute(sql)
-    dados = bd.fetchall()
-    con.commit()
-    for i in range(len(dados)):
-        aux = (dados[i][0].strip("(").strip(")"))
-        sp = aux.split(",")
-        lista_id_medidor.append(sp[0])
-        lista_leitura.append(sp[1])
-        lista_ts_medidor.append(sp[2])
+        con = psycopg2.connect(host='192.168.122.232', user='postgres', password='postgres',dbname='inmetrobd')
+        #print con
+        bd = con.cursor(cursor_factory = psycopg2.extras.DictCursor)
+        #bd = con.cursor()
+        #print bd
+        sql = "select (id_medidor,leitura,ts_medidor) from logmedidores where id_medidor = '%s' and ts_medidor between '%s' and '%s'"%(id_valor,ts_inicial,ts_final)
+        bd.execute(sql)
+        dados = bd.fetchall()
+        #print dados
         
-    return (lista_id_medidor,lista_leitura,lista_ts_medidor)
+        con.commit()
+        for i in range(len(dados)):
+            aux = (dados[i][0].strip("(").strip(")"))
+            sp = aux.split(",")
+            lista_id_medidor.append(sp[0])
+            lista_leitura.append(sp[1])
+            lista_ts_medidor.append(sp[2])
+        print "retournou aqui"
 
+        
+        #print (lista_id_medidor,lista_leitura,lista_ts_medidor)
+        return (lista_id_medidor,lista_leitura,lista_ts_medidor)
+        
+    except:
+        print "erro!!!"
 
 def conferirInmetro(id_medidor,ts_inicial,ts_final,hash_rastro):
     hashconf = ""
@@ -91,23 +103,25 @@ def conferirInmetro(id_medidor,ts_inicial,ts_final,hash_rastro):
 
     rastro_ts = []
     inmetro_ts = [] 
-
+    
     inmetro_id,inmetro_leitura,inmetro_ts = pegaBancoInmetro(id_medidor,ts_inicial,ts_final)#recupera do banco do inmetro
-
-    hs_id_medidor = criarHASH(id_medidor)#cria o hash do id do medidor
-
+    print "aquiiiiiiii!!!!!!!!"
+    hs_id_medidor = criarHash(id_medidor)#cria o hash do id do medidor
+    #print inmetro_id,inmetro_leitura,inmetro_ts
     #rastro_id,rastro_leitura,rastro_ts = audit.pegaBancoRastro(str(hs_id_medidor),ts_inicial,ts_final)#recupera do banco do rastro
-
-    for i in range(len(inmetro_id)):
-        hashconf = hashconf + criarHASH(inmetro_leitura[i]+inmetro_ts[i])
-        #print hashconf
-        #hash_inmetro_id = criarHASH(inmetro_id[i])
+    tam = len(inmetro_leitura)
+    print tam,"ssssssssssssssssssss"
+    for i in range(tam):
+        print "aquiiiiiiii!!!!!!!!"
+        hashconf = hashconf + criarHash(inmetro_leitura[i]+inmetro_ts[i])
+        print hashconf
+        #hash_inmetro_id = criarHash()
         #hash_inmetro_leitura = criarHASH(inmetro_leitura[i])
 
         #lista_hash_inmetro_id.append(hash_inmetro_id)
         #lista_hash_inmetro_leitura.append(hash_inmetro_leitura)
     #print hash_rastro,'\n'
-    #print hashconf
+    print hashconf
     z = hashconf == hash_rastro
     print hashconf,"\n"
     print hash_rastro
@@ -122,4 +136,3 @@ def conferirInmetro(id_medidor,ts_inicial,ts_final,hash_rastro):
     else:
         print"INCORRETO"
         return False
-

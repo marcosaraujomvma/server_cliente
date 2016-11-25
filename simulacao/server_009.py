@@ -124,9 +124,6 @@ def conferirInmetro(id_medidor,ts_inicial,ts_final,hash_rastro):
 
 
 
-
-
-
 def teste(newsock,fromaddr):
     
     #sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -181,7 +178,7 @@ def teste(newsock,fromaddr):
                             print ts_inicial01
                             print ts_final01
                             print hash_chain
-                            w = conferirInmetro(id_medidor,ts_inicial01,ts_final01,hash_chain)
+                            w = inmetro.conferirInmetro(id_medidor,ts_inicial01,ts_final01,hash_chain)
                             hash_chain = ""
                             cont01 = 0
                             if w == True:
