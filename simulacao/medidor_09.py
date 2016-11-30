@@ -30,7 +30,7 @@ if hashlib.md5(conn.getpeercert(True)).hexdigest() != CERT:
 else:
     print 'Conectado!'
     for i in range(10000000):
-        time.sleep(1)
+        time.sleep(0.1)
         ts = time.time()
         leitura = random.randint(1,6)
         msg = ("%s;%s"%(str(leitura),str(ts)))

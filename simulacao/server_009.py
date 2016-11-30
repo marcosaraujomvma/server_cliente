@@ -7,6 +7,7 @@ from Crypto.PublicKey import RSA
 import inmetro
 import psycopg2
 from psycopg2 import extras
+import sys
 
 ts = 0
 lista = []
@@ -142,7 +143,7 @@ def teste(newsock,fromaddr):
                 
                 break
             else:
-                               
+                print sys.getsizeof(buf)               
                 id_medidor,leitura,ts_medidor,assinatura = splitFrame(buf)
                 #print ts_medidor
                 print type(ts_medidor)
