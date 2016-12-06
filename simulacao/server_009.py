@@ -155,6 +155,7 @@ def teste(newsock,fromaddr):
                 #print id_medidor
                 if conferir_assinatura == True:
                     inmetro.gravaBancoDadosInmetro(id_medidor,leitura,ts_medidor)
+                    #print "++++++++++++++++++++++"
                     if int(id_medidor) == 1:
                         global cont01
                         cont01 += 1

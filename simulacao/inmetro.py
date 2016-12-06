@@ -5,6 +5,7 @@ import socket, ssl, thread,time, hashlib
 from Crypto.Hash import SHA
 from Crypto.PublicKey import RSA
 import psycopg2
+from psycopg2 import extras
 
 
 def criarHash(texto):
@@ -25,15 +26,14 @@ def gravaBancoDadosInmetro(id_medidor,leitura,ts):
     
     assinatura = key.sign(has,"")
     
-    con = psycopg2.connect(host='192.168.122.232', user='postgres', password='postgres',dbname='inmetrobd')
+    con = psycopg2.connect(host='192.168.122.240', user='postgres', password='postgres',dbname='inmetrobd')
 
     bd = con.cursor()
-
     sql = "INSERT INTO logmedidores (id_medidor,leitura,ts_medidor,assinatura)VALUES ('%s','%s','%s','%s')"%(id_medidor,leitura,ts,assinatura)
 
-
+    
     bd.execute(sql)
-
+    
     con.commit()
 
     con.close()
@@ -65,7 +65,7 @@ def pegaBancoInmetro(id_valor,ts_inicial,ts_final):
     lista_ts_medidor = []
     try: 
     
-        con = psycopg2.connect(host='192.168.122.232', user='postgres', password='postgres',dbname='inmetrobd')
+        con = psycopg2.connect(host='192.168.122.240', user='postgres', password='postgres',dbname='inmetrobd')
         #print con
         bd = con.cursor(cursor_factory = psycopg2.extras.DictCursor)
         #bd = con.cursor()
